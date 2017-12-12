@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Home</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+
+
+<!-- Fonts Google CSS -->
+<link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
+<link href="../dist/css/style.css" rel="stylesheet">
+
+<link href="../dist/css/animate.css" rel="stylesheet">
+
+</head>
+<body>
+
+	<nav id="main_menu"></nav>
+	
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Home </h1>
+				
+			</div>		
+		</div>	
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+			<fieldset>
+			<legend>Form Post</legend>
+					
+			<div id="resultado"></div>		
+					
+			Name:<input type="text" name="name" id="name"><br>
+			Phone: <input type="text" name="phone" id="phone"><br>
+			Email: <input type="text" name="email" id="email"><br>
+			Observation: <textarea rows="2" cols="40" name="observation" id="observation"></textarea><br>
+			<a type="button" href="javascript:;" onclick="realizaProceso();return false;">Submit</a>
+			
+			</fieldset>
+			
+			</div>			
+		</div>
+	</div>	
+
+
+
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/poper/poper.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- Template render -->
+    <script src="../dist/js/render_menu.js"></script>
+            
+            
+   <script>
+	
+		function realizaProceso(){
+	        var parametros = {
+	                "name" : document.getElementById("name").value,
+	                "phone" : document.getElementById("phone").value,
+	                "email" : document.getElementById("email").value,
+	                "observation" : document.getElementById("observation").value,
+	        };
+	        $.ajax({
+	                data:  parametros,
+	                url:   'https://my-api-new.appspot.com/_ah/api/echo/v1/save_operator',
+	                type:  'post',
+	                beforeSend: function () {
+	                    $("#resultado").html("Procesando, espere por favor...");
+	                },
+	                success:  function (response) {	                	
+	                    $("#resultado").html(response.message);
+	                }
+	        });
+		}
+	</script>
+            
+    
+</body>
+</html>
