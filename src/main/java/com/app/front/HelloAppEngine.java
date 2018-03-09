@@ -1,4 +1,4 @@
-package com.app.alphafront;
+package com.app.front;
 
 import java.io.IOException;
 

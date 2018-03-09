@@ -1,4 +1,4 @@
-package com.app.alphafront.jsf;
+package com.app.front.jsf;
 
 import java.io.Serializable;
 
