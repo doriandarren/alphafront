@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Client</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+
+
+<!-- Fonts Google CSS -->
+<!--  <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
+<link href="../dist/css/style.css" rel="stylesheet">-->
+
+<link href="../dist/css/animate.css" rel="stylesheet">
+
+
+</head>
+<body>
+
+	<nav id="main_menu"></nav>
+	
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Client </h1>
+			</div>		
+		</div>	
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+			<fieldset>
+			<legend>Form Post</legend>
+					
+			<div id="result" class="" role="alert"></div>		
+							
+			<form>
+			  <input type="hidden" name="id" id="id">
+			
+			  <div class="form-group row">
+				<label for="name" class="col-2 col-form-label">Name</label>
+				<div class="col-10">
+				   <input class="form-control" type="text" name="name" id="name">
+				</div>
+			  </div>
+			
+			  <div class="form-group row">
+				<label for="description" class="col-2 col-form-label">Description</label>
+				<div class="col-10">
+				   <input class="form-control" type="text" name="description" id="description">
+				</div>
+			  </div>
+			  	
+			  	
+			  <div class="form-group row">
+				<div class="col-12">
+				   <a type="button" class="btn btn-outline-success" href="javascript:;" onclick="save();return false;">Save</a>
+				   <a type="button" class="btn btn-outline-primary" href="javascript:;" onclick="update();return false;">Update</a>
+				</div>
+			  </div>			  
+			  			  
+			</form>
+			
+			</fieldset>
+			
+			</div>			
+		</div>
+	</div>	
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<a type="button" href="javascript:;" onclick="getAll();return false;">Find</a>
+				<div id="res_all"></div>	
+			</div>			
+		</div>
+	</div>	
+
+
+	<!-- jQuery first, then Bootstrap JS -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- Template render -->
+    <script src="../dist/js/render_menu.js"></script>
+    <script src="../dist/js/utils.js"></script>
+    
+   <script>
+   function getAll(){
+	   var parametros = {
+           "get_all" : "-"
+       };
+	   $.ajax({
+           url:   'https://my-api-new.appspot.com/_ah/api/apiclient/v1/get_all_client',
+           type:  'get',
+           beforeSend: function () {
+        	   document.getElementById("res_all").innerHTML = "Proccesing, waiting...";
+           },
+           success:  function (response) {        	   
+               res = "<table class=\"table\" id=\"mytable\">";				
+               	res+="<thead>";
+            	res += "<tr>";
+           		res += "<td>Name</td>";
+           		res += "<td>Description</td>";
+           		res += "<td>Create At</td>";
+           		res += "<td>Actions</td>";
+           		res += "</tr>";
+           		res += "</thead>";
+           		res += "<tbody>";
+           		
+               for(i=0; i<response.items.length;i++){
+            	               	   
+            	   res += "<tr>";
+            	   res += "<td>"+response.items[i].name+"</td>";
+            	   res += "<td>"+response.items[i].description+"</td>";
+            	   res += "<td>"+response.items[i].createAt+"</td>";
+            	   res += "<td><a type='button' href='javascript:;' onclick='find(\""+response.items[i].key.id+"\");return false;'>Update</a>";
+            	   res += "<a type='button' href='javascript:;' onclick='del(\""+response.items[i].key.id+"\");return false;'>Delete</a></td>";
+            	   res+="</tr>";	
+               }
+               
+               
+               res += "</tbody>";
+               res += "</table>";
+               
+               
+               $("#res_all").html(res);
+               
+           },
+           error : function(e) {
+               alert('error'+e);
+               $("#res_all").html("");
+           }
+   		});
+   	}
+   
+     
+   
+	function save(){		
+	    var parametros = {
+	            "name" : document.getElementById("name").value,
+	            "description" : document.getElementById("description").value
+	    };
+	    	    
+	    $.ajax({
+	            data:  parametros,
+	            url:   'https://my-api-new.appspot.com/_ah/api/apiclient/v1/save_client',
+	            type:  'post',
+	            beforeSend: function () {
+	            	document.getElementById("result").innerHTML = "Proccesing, waiting...";
+	            },
+	            success:  function (response) {	                	
+	            	$("#result").addClass("alert alert-success").html(response.message);
+	                document.getElementById("name").value="";
+	                document.getElementById("description").value="";
+	                getAll();
+	           }
+	    });
+	}
+	
+	
+	
+	function find(id){
+		$.ajax({
+            //data:  client_id_id,
+            url:   'https://my-api-new.appspot.com/_ah/api/apiclient/v1/get_client?client_id='+id,
+            type:  'get',
+            beforeSend: function () {
+            	document.getElementById("result").innerHTML = "Proccesing, waiting...";
+            },
+            success:  function (response) {             	
+            	document.getElementById("result").className = '';
+            	document.getElementById("result").innerHTML = "";
+            	document.getElementById("id").value=response.key.id;
+                document.getElementById("name").value=response.name;
+                document.getElementById("description").value=response.description;
+           },
+           error : function(e) {
+               alert('error'+e);
+           }
+    	});
+	}
+	
+	
+	function update(){
+		
+		var data = {
+		    name : document.getElementById("name").value,
+		    description : document.getElementById("description").value,
+		    id : document.getElementById("id").value
+		};
+				
+		$.ajax({
+            data:  data,
+            url:   'https://my-api-new.appspot.com/_ah/api/apiclient/v1/update_client',
+            type:  'POST',
+            beforeSend: function () {
+            	document.getElementById("result").innerHTML = "Proccesing, waiting...";
+            },
+            success:  function (response) {	
+                $("#result").addClass("alert alert-success").html(response.message);
+                
+                document.getElementById("id").value="";
+                document.getElementById("name").value="";
+                document.getElementById("description").value="";
+                getAll();
+           },
+           error : function(e) {
+               alert('error'+e);
+               console.log(Object.values(e));
+           }
+    	});
+	}
+	
+	
+	function del(id){		
+		var conf = confirm('Desea Eliminar el registro?');
+		if(conf==true){
+			$.ajax({
+	            url:   'https://my-api-new.appspot.com/_ah/api/apiclient/v1/delete_client?client_id='+id,
+	            type:  'get',
+	            beforeSend: function () {
+	            	document.getElementById("result").innerHTML = "Proccesing, waiting...";
+	            },
+	            success:  function (response) { 
+	            	$("#result").addClass("alert alert-success").html(response.message);
+	            	getAll();
+	           },
+	           error : function(e) {
+	               alert('error'+e);
+	           }
+	    	});	
+		}
+	}
+	</script>
+</body>
+</html>

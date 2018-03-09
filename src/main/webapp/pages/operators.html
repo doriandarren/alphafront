@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Operators</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+
+
+<!-- Fonts Google CSS -->
+<!--  <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Berkshire+Swash" rel="stylesheet">
+<link href="../dist/css/style.css" rel="stylesheet">-->
+
+<link href="../dist/css/animate.css" rel="stylesheet">
+
+
+</head>
+<body>
+
+	<nav id="main_menu"></nav>
+	
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<h1>Operators </h1>
+				<a type="button" href="javascript:;" onclick="getAll();return false;">Find</a>
+				<div id="res_all">
+				
+				</div>
+			</div>		
+		</div>	
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+			<fieldset>
+			<legend>Form Post</legend>
+					
+			<div id="resultado"></div>		
+					
+					
+			<form>
+			  <input type="hidden" name="operator_id" id="operator_id">
+			
+			  <div class="form-row">
+			    <div class="form-group col-md-12">
+			      <label for="name" class="col-form-label">Name</label>
+			      <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+			    </div>
+			  </div>
+			  
+			  <div class="form-row">
+			    <div class="form-group col-md-12">
+			      <label for="phone" class="col-form-label">Phone</label>
+			      <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone">
+			    </div>
+			  </div>
+			  
+			  <div class="form-row">
+			    <div class="form-group col-md-12">
+			      <label for="email" class="col-form-label">Email</label>
+			      <input type="email" name="email" id="email" class="form-control" placeholder="Email">
+			    </div>
+			  </div>
+			  
+			  <div class="form-row">
+			    <div class="form-group col-md-12">
+			      <label for="observation" class="col-form-label">Observation</label>
+			      <textarea rows="2" cols="40" name="observation" id="observation" class="form-control"></textarea>
+			    </div>
+			  </div>
+			  
+			  <div class="form-row">
+			    <div class="form-group col-md-12">
+			      <a type="button" href="javascript:;" onclick="realizaProceso();return false;">Submit</a>
+			    </div>
+			  </div>
+			  
+			</form>
+			
+			</fieldset>
+			
+			</div>			
+		</div>
+	</div>	
+
+
+
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/poper/poper.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- Template render -->
+    <script src="../dist/js/render_menu.js"></script>
+            
+            
+   <script>
+   function getAll(){
+	   //var invocation = new XMLHttpRequest();
+	   var parametros = {
+           "get_all" : "-"
+       };
+	   $.ajax({
+           //data:  parametros,
+           url:   'https://my-api-new.appspot.com/_ah/api/apioperator/v1/get_all_operator',
+           type:  'get',
+           beforeSend: function () {
+               $("#res_all").html("Procesando, espere por favor...");
+           },
+           success:  function (response) {        	   
+               res = "<table class=\"table\" id=\"mytable\">";				
+               	res+="<thead>";
+            	res += "<tr>";
+           		res += "<td>Name</td>";
+           		res += "<td>Email</td>";
+           		res += "<td>Phone</td>";
+           		res += "<td>Observation</td>";
+           		res += "<td>Actions</td>";
+           		res += "</tr>";
+           		res += "</thead>";
+           		res += "<tbody>";
+           		
+               for(i=0; i<response.items.length;i++){
+            	               	   
+            	   res += "<tr>";
+            	   res += "<td>"+response.items[i].name+"</td>";
+            	   res += "<td>"+response.items[i].phone+"</td>";
+            	   res += "<td>"+response.items[i].email+"</td>";
+            	   res += "<td>"+response.items[i].observation+"</td>";
+            	   res += "<td><a type='button' href='javascript:;' onclick='loadOperator(\""+response.items[i].id+"\");return false;'>Update</a>";
+            	   res += "<a type='button' href='javascript:;' onclick='deleteOperator(\""+response.items[i].id+"\");return false;'>Delete</a></td>";
+            	   res+="</tr>";	
+               }
+               
+               
+               res += "</tbody>";
+               res += "</table>";
+               
+               
+               $("#res_all").html(res);
+               
+           },
+           error : function(e) {
+               alert('error'+e.getMessage());
+               $("#res_all").html("");
+           }
+   		});
+   	}
+   
+   
+	function realizaProceso(){
+	    var parametros = {
+	            "name" : document.getElementById("name").value,
+	            "phone" : document.getElementById("phone").value,
+	            "email" : document.getElementById("email").value,
+	            "observation" : document.getElementById("observation").value,
+	    };
+	    $.ajax({
+	            data:  parametros,
+	            url:   'https://my-api-new.appspot.com/_ah/api/apioperator/v1/save_operator',
+	            type:  'post',
+	            beforeSend: function () {
+	                $("#resultado").html("Procesando, espere por favor...");
+	            },
+	            success:  function (response) {	                	
+	                $("#resultado").html(response.message);
+	                document.getElementById("name").value="";
+	                document.getElementById("phone").value="";
+	                document.getElementById("email").value="";
+	                document.getElementById("observation").value="";
+	                getAll();
+	           }
+	    });
+	}
+	
+	
+	
+	function loadOperator(operator_id){
+			
+		$.ajax({
+            data:  operator_id,
+            url:   'https://my-api-new.appspot.com/_ah/api/apioperator/v1/get_operator?operator_id='+operator_id,
+            type:  'get',
+            beforeSend: function () {
+                $("#resultado").html("Procesando, espere por favor...");
+            },
+            success:  function (response) {
+            	document.getElementById("operator_id").value=response.id;
+                document.getElementById("name").value=response.name;
+                document.getElementById("phone").value=response.phone;
+                document.getElementById("email").value=response.email;
+                document.getElementById("observation").value=response.observation;
+           }
+    	});
+						
+		
+	}
+	
+	
+	
+	function updateOperator(operator){
+		$.ajax({
+            data:  operator,
+            url:   'https://my-api-new.appspot.com/_ah/api/apioperator/v1/update_operator',
+            type:  'post',
+            beforeSend: function () {
+                $("#resultado").html("Procesando, espere por favor...");
+            },
+            success:  function (response) {	                	
+                $("#resultado").html(response.message);
+                document.getElementById("name").value="";
+                document.getElementById("phone").value="";
+                document.getElementById("email").value="";
+                document.getElementById("observation").value="";
+                getAll();
+           }
+    	});
+	}
+	
+	
+	function deleteOperator(idOperador){
+		
+	}
+	
+	
+	
+	</script>
+            
+    
+</body>
+</html>

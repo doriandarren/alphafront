@@ -8,13 +8,21 @@ var html = "<button class=\"navbar-toggler navbar-toggler-right\" type=\"button\
       <a class=\"nav-link\" href=\"index.html\">Home</a>\
     </li>\
     <li class=\"nav-item dropdown\">\
-      <a class=\"nav-link dropdown-toggle\" href=\"http://example.com\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\
-        Figuras\
+    <a class=\"nav-link dropdown-toggle\" href=\"#client\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\
+      Client\
+    </a>\
+    <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdownMenuLink\">\
+      <a class=\"dropdown-item\" href=\"client.html\">new</a>\
+    </div>\
+    <li class=\"nav-item dropdown\">\
+      <a class=\"nav-link dropdown-toggle\" href=\"#operator\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\
+        Operators\
       </a>\
       <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdownMenuLink\">\
-        <a class=\"dropdown-item\" href=\"twiiter.html\">Twiiter</a>\
+        <a class=\"dropdown-item\" href=\"operators.html\">new</a>\
       </div>\
     </li>\
+  </li>\
   </ul>\
 </div>";
 
